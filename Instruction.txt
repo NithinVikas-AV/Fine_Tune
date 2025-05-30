@@ -1,0 +1,88 @@
+Create a virtual Python environment (3.11.9) with all the libraries below this cell to run this code.  
+Ensure you have CUDA and cuDNN installed according to your GPU.
+
+CUDA and cuDNN are used to run your general-purpose code through your GPU instead of the CPU.  
+We should install the CUDA and cuDNN versions corresponding to your GPU, and through PyTorch, we’re going to shift from CPU to GPU.
+
+For reference, my GPU, CUDA version, and cuDNN version:
+GPU device name: NVIDIA GeForce RTX 4050 Laptop GPU  
+ CUDA version: 11.8  
+ cuDNN version: 8.9.7, for CUDA 11.x
+
+---------- To know the CUDA and cuDNN version of your GPU ----------
+
+To find the CUDA version: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
+
+For reference (My details):
+
+    Search in this table ----> Compute capability, GPU semiconductors and Nvidia GPU board products:
+        GPU device name: NVIDIA GeForce RTX 4050 Laptop GPU
+        My GPU's Micro-architecture: Ada Lovelace[56]
+        Compute capability (version): 8.9
+
+    Using the information above, search in this table ----> Compute capability (CUDA SDK support vs. microarchitecture):
+        Search for the column Ada Lovelace and find the Compute Capability version value (8.9) in the column.
+        Then your CUDA version is the value mentioned in the column CUDA SDK version(s).
+        My CUDA SDK version --> 11.8
+
+To find the cuDNN version: https://developer.nvidia.com/rdp/cudnn-archive
+
+You can search for the cuDNN version corresponding to your CUDA version.
+
+For reference (My details):  
+ It shows like this, click that --> Download cuDNN v8.9.7 (December 5th, 2023), for CUDA 11.x
+
+    Download the latest Windows version of cuDNN corresponding to your CUDA version.
+    This was the latest version when I downloaded the cuDNN.
+
+After installing all the above, you need to install the CUDA app and also extract the cuDNN folder which you downloaded earlier.
+
+Open NVIDIA app and install the drivers in the driver's section.
+
+Now you need to update the path of CUDA in the Environment Variables.  
+To do this, follow the steps below:  
+ Search for "Edit the system environment variables" in your search bar.  
+ Click Environment Variables.  
+ Under System Variables, click Path, then click Edit, and add these paths:
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin  
+ C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp  
+ Now click OK for every tab and now all the paths are added.
+
+Now you need to install PyTorch: https://pytorch.org/get-started/locally/#windows-pip
+
+**NOTE:** Latest PyTorch requires Python 3.9 or later.
+
+Scroll down a little and you will find these: PyTorch Build, Your OS, Package, Language, Compute Platform, Run this Command.
+
+Select your specifications under that and you will get the command for installing PyTorch.
+
+For reference (My details):  
+ PyTorch Build: Stable (2.7.0)  
+ Your OS: Windows  
+ Package: Pip  
+ Language: Python  
+ Compute Platform: CUDA 11.8  
+ Run this Command:  
+ `bash
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    `
+
+Sometimes you may not find the version directly. You may refer to AI.
+
+Now you have CUDA, cuDNN, and the PyTorch command...
+
+Now create a virtual environment using Python 3.11.9. Sometimes 3.13 doesn't support it, so it’s better to go for 3.11.
+
+Now activate the virtual environment and install PyTorch using the PyTorch command.  
+Also, download all the libraries in the cell below.
+
+Hurray...  
+Now you can access GPU...
+
+You can install datasets from kaggle.com.  
+Link for train.csv: https://www.kaggle.com/datasets/julian3833/jigsaw-toxic-comment-classification-challenge?resource=download&select=train.csv
+
+You can refer to this channel to fine-tune this model.  
+YouTube: https://youtu.be/9he4XKqqzvE?si=KiBT_S44yTigD4wM
+
+**I will not be providing the virtual environment.**

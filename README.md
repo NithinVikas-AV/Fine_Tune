@@ -1,88 +1,111 @@
-Create a virtual Python environment (3.11.9) with all the libraries below this cell to run this code.  
-Ensure you have CUDA and cuDNN installed according to your GPU.
+# 🔎 Text Classification & Generation using BERT and DistilGPT2
 
-CUDA and cuDNN are used to run your general-purpose code through your GPU instead of the CPU.  
-We should install the CUDA and cuDNN versions corresponding to your GPU, and through PyTorch, we’re going to shift from CPU to GPU.
+This repository contains two Jupyter Notebooks demonstrating:
 
-For reference, my GPU, CUDA version, and cuDNN version:
-GPU device name: NVIDIA GeForce RTX 4050 Laptop GPU  
- CUDA version: 11.8  
- cuDNN version: 8.9.7, for CUDA 11.x
+1. **Text Classification using BERT (Sequence-to-Classification)**
+2. **Text Generation using DistilGPT2 (Sequence-to-Sequence)**
 
----------- To know the CUDA and cuDNN version of your GPU ----------
+---
 
-To find the CUDA version: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
+## 📁 Contents
 
-For reference (My details):
+- `BERT (seq to cls).ipynb` – Fine-tuning BERT for a classification task.
+- `DITSTILGPT2 (seq to seq).ipynb` – Fine-tuning DistilGPT2 for text generation using PEFT (LoRA).
 
-    Search in this table ----> Compute capability, GPU semiconductors and Nvidia GPU board products:
-        GPU device name: NVIDIA GeForce RTX 4050 Laptop GPU
-        My GPU's Micro-architecture: Ada Lovelace[56]
-        Compute capability (version): 8.9
+---
 
-    Using the information above, search in this table ----> Compute capability (CUDA SDK support vs. microarchitecture):
-        Search for the column Ada Lovelace and find the Compute Capability version value (8.9) in the column.
-        Then your CUDA version is the value mentioned in the column CUDA SDK version(s).
-        My CUDA SDK version --> 11.8
+## 1️⃣ BERT: Sequence to Classification
 
-To find the cuDNN version: https://developer.nvidia.com/rdp/cudnn-archive
+### 📌 Description
+This notebook fine-tunes a pretrained `BERT` model for a text classification task using Hugging Face's `transformers` and `datasets` libraries.
 
-You can search for the cuDNN version corresponding to your CUDA version.
+### 🔧 Setup
 
-For reference (My details):  
- It shows like this, click that --> Download cuDNN v8.9.7 (December 5th, 2023), for CUDA 11.x
+Install dependencies:
+```bash
+pip install transformers datasets accelerate pandas scikit-learn
+```
 
-    Download the latest Windows version of cuDNN corresponding to your CUDA version.
-    This was the latest version when I downloaded the cuDNN.
+### 🧠 Model
+- **Model**: `bert-base-uncased`
+- **Task**: Multi-class classification
+- **Loss Function**: CrossEntropyLoss
+- **Trainer**: `transformers.Trainer`
 
-After installing all the above, you need to install the CUDA app and also extract the cuDNN folder which you downloaded earlier.
+### 🏁 Training Configuration
+- Learning rate: 2e-5
+- Epochs: 3
+- Batch size: 16
+- Evaluation strategy: Epoch
 
-Open NVIDIA app and install the drivers in the driver's section.
+### ✅ Outputs
+- Fine-tuned model
+- Evaluation metrics: accuracy, precision, recall
 
-Now you need to update the path of CUDA in the Environment Variables.  
-To do this, follow the steps below:  
- Search for "Edit the system environment variables" in your search bar.  
- Click Environment Variables.  
- Under System Variables, click Path, then click Edit, and add these paths:
-C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\bin  
- C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.8\libnvvp  
- Now click OK for every tab and now all the paths are added.
+---
 
-Now you need to install PyTorch: https://pytorch.org/get-started/locally/#windows-pip
+## 2️⃣ DistilGPT2: Sequence to Sequence (Text Generation)
 
-**NOTE:** Latest PyTorch requires Python 3.9 or later.
+### 📌 Description
+This notebook fine-tunes a `distilgpt2` model for conditional text generation using [PEFT](https://github.com/huggingface/peft) with LoRA (Low-Rank Adaptation).
 
-Scroll down a little and you will find these: PyTorch Build, Your OS, Package, Language, Compute Platform, Run this Command.
+### 🔧 Setup
 
-Select your specifications under that and you will get the command for installing PyTorch.
+Install dependencies:
+```bash
+pip install transformers accelerate pandas peft sentencepiece
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install pyarrow
+```
 
-For reference (My details):  
- PyTorch Build: Stable (2.7.0)  
- Your OS: Windows  
- Package: Pip  
- Language: Python  
- Compute Platform: CUDA 11.8  
- Run this Command:  
- `bash
-    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-    `
+### ⚠️ Common Errors Encountered & Fixes
 
-Sometimes you may not find the version directly. You may refer to AI.
+- `ImportError: _get_promotion_state`:  
+  → Downgrade or reinstall `numpy`:  
+  ```bash
+  pip install numpy==1.24.4
+  ```
 
-Now you have CUDA, cuDNN, and the PyTorch command...
+- `ImportError: EncoderDecoderCache`:  
+  → Upgrade `transformers`:  
+  ```bash
+  pip install --upgrade transformers
+  ```
 
-Now create a virtual environment using Python 3.11.9. Sometimes 3.13 doesn't support it, so it’s better to go for 3.11.
+- `RuntimeError: tensors share memory`:  
+  → Use `.save_model()` for proper saving if using `Trainer`.
 
-Now activate the virtual environment and install PyTorch using the PyTorch command.  
-Also, download all the libraries in the cell below.
+### 🧠 Model
+- **Model**: `distilgpt2`
+- **Fine-tuning technique**: PEFT with LoRA
+- **LoRA Config**:
+  - r = 8
+  - alpha = 32
+  - dropout = 0.05
+  - target_modules = `["c_proj"]`
 
-Hurray...  
-Now you can access GPU...
+### 📦 Dataset
+You can load `.parquet` datasets directly from the Hugging Face Hub using `pandas.read_parquet` and a library like `pyarrow`.
 
-You can install datasets from kaggle.com.  
-Link for train.csv: https://www.kaggle.com/datasets/julian3833/jigsaw-toxic-comment-classification-challenge?resource=download&select=train.csv
+---
 
-You can refer to this channel to fine-tune this model.  
-YouTube: https://youtu.be/9he4XKqqzvE?si=KiBT_S44yTigD4wM
+## 🧪 Example Command for Training
 
-**I will not be providing the virtual environment.**
+Run inside the notebook or Python script:
+```python
+trainer.train()
+```
+
+---
+
+## 🚀 Output
+
+- Trained model weights
+- Evaluation metrics for classification/generation quality
+- Optionally push to Hugging Face Hub
+
+---
+
+## 📌 License
+
+MIT License
